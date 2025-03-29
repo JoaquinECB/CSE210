@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 
-class Program
+class PromptManager
 {
-    static List<string> prompts = new List<string>
+    private List<string> prompts = new List<string>
     {
         "Who was the most interesting person I interacted with today?",
         "What was the best part of my day?",
@@ -16,10 +15,71 @@ class Program
         "What is something I am grateful for today?"
     };
 
-    static List<string> journalEntries = new List<string>();
+    public string GetRandomPrompt()
+    {
+        Random random = new Random();
+        return prompts[random.Next(prompts.Count)];
+    }
+}
 
+class Journal
+{
+    private List<string> entries = new List<string>();
+
+    public void AddEntry(string entry)
+    {
+        entries.Add(entry);
+    }
+
+    public void DisplayEntries()
+    {
+        Console.WriteLine("\nJournal Entries:");
+        if (entries.Count == 0)
+        {
+            Console.WriteLine("The journal is empty.");
+        }
+        else
+        {
+            foreach (string entry in entries)
+            {
+                Console.WriteLine(entry);
+            }
+        }
+    }
+
+    public void SaveToFile(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            Console.WriteLine("Filename cannot be empty. Please try again.");
+            return;
+        }
+
+        File.WriteAllLines(fileName, entries);
+        Console.WriteLine("Journal saved successfully.");
+    }
+
+    public void LoadFromFile(string fileName)
+    {
+        if (File.Exists(fileName))
+        {
+            entries = new List<string>(File.ReadAllLines(fileName));
+            Console.WriteLine("Journal loaded successfully.");
+        }
+        else
+        {
+            Console.WriteLine("The file does not exist.");
+        }
+    }
+}
+
+class Program
+{
     static void Main(string[] args)
     {
+        PromptManager promptManager = new PromptManager();
+        Journal journal = new Journal();
+
         string userChoice = "";
         while (userChoice != "5")
         {
@@ -35,16 +95,26 @@ class Program
             switch (userChoice)
             {
                 case "1":
-                    WriteNewEntry();
+                    string prompt = promptManager.GetRandomPrompt();
+                    Console.WriteLine($"\n{prompt}");
+                    Console.Write("Your Answer: ");
+                    string response = Console.ReadLine();
+                    string entry = $"{DateTime.Now.ToShortDateString()} - {prompt} - {response}";
+                    journal.AddEntry(entry);
+                    Console.WriteLine("Entry saved.");
                     break;
                 case "2":
-                    DisplayJournal();
+                    journal.DisplayEntries();
                     break;
                 case "3":
-                    SaveJournalToFile();
+                    Console.Write("\nEnter the filename to save the journal: ");
+                    string saveFileName = Console.ReadLine();
+                    journal.SaveToFile(saveFileName);
                     break;
                 case "4":
-                    LoadJournalFromFile();
+                    Console.Write("\nEnter the filename to load the journal: ");
+                    string loadFileName = Console.ReadLine();
+                    journal.LoadFromFile(loadFileName);
                     break;
                 case "5":
                     Console.WriteLine("Goodbye!");
@@ -53,57 +123,6 @@ class Program
                     Console.WriteLine("Invalid option. Please try again.");
                     break;
             }
-        }
-    }
-
-    static void WriteNewEntry()
-    {
-        Random random = new Random();
-        string prompt = prompts[random.Next(prompts.Count)];
-        Console.WriteLine($"\n{prompt}");
-        Console.Write("Your Answer: ");
-        string response = Console.ReadLine();
-        string entry = $"{DateTime.Now.ToShortDateString()} - {prompt} - {response}";
-        journalEntries.Add(entry);
-        Console.WriteLine("Entry saved.");
-    }
-
-    static void DisplayJournal()
-    {
-        Console.WriteLine("\nJournal Entries:");
-        if (journalEntries.Count == 0)
-        {
-            Console.WriteLine("The journal is empty.");
-        }
-        else
-        {
-            foreach (string entry in journalEntries)
-            {
-                Console.WriteLine(entry);
-            }
-        }
-    }
-
-    static void SaveJournalToFile()
-    {
-        Console.Write("\nEnter the filename to save the journal: ");
-        string fileName = Console.ReadLine();
-        File.WriteAllLines(fileName, journalEntries);
-        Console.WriteLine("Journal saved successfully.");
-    }
-
-    static void LoadJournalFromFile()
-    {
-        Console.Write("\nEnter the filename to load the journal: ");
-        string fileName = Console.ReadLine();
-        if (File.Exists(fileName))
-        {
-            journalEntries = new List<string>(File.ReadAllLines(fileName));
-            Console.WriteLine("Journal loaded successfully.");
-        }
-        else
-        {
-            Console.WriteLine("The file does not exist.");
         }
     }
 }
