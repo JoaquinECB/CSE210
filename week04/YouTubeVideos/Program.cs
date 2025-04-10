@@ -7,10 +7,8 @@ class Program
     {
         Console.WriteLine("Hello World! This is the YouTubeVideos Project.");
 
-        // Crear lista de videos
         List<Video> videos = new List<Video>();
 
-        // Crear y agregar videos con comentarios
         Video video1 = new Video("Learn C#", "John Doe", 600);
         video1.AddComment(new Comment("Alice", "Great video!"));
         video1.AddComment(new Comment("Bob", "Very helpful, thanks!"));
@@ -29,7 +27,6 @@ class Program
         video3.AddComment(new Comment("Ivy", "Great for beginners!"));
         videos.Add(video3);
 
-        // Mostrar información de cada video y sus comentarios
         foreach (Video video in videos)
         {
             Console.WriteLine($"\nVideo: {video.Title} by {video.Author}");
