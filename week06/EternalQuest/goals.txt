@@ -1,0 +1,4 @@
+250
+SimpleGoal|wake up|wake up at 6am |50|True
+EternalGoal|Read scriptures|Read my book of mormon every day|100
+ChecklistGoal|exerciese|make exercise in the morning and night|100|4|2|30
