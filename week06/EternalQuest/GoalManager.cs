@@ -6,11 +6,13 @@ public class GoalManager
 {
     private List<Goal> _goals;
     private int _score;
+    private int _level;
 
     public GoalManager()
     {
         _goals = new List<Goal>();
         _score = 0;
+        _level = 1; // Starting level
     }
 
     public void AddGoal()
@@ -63,6 +65,8 @@ public class GoalManager
             {
                 _score += checklistGoal.Bonus;
             }
+
+            CheckLevelUp(); // Check if the player levels up after recording the event
         }
         else
         {
@@ -70,8 +74,20 @@ public class GoalManager
         }
     }
 
+    private void CheckLevelUp()
+    {
+        int pointsForNextLevel = _level * 100; // Example: 100 points per level
+        if (_score >= pointsForNextLevel && _level < 10) // Max level: 10
+        {
+            _level++;
+            Console.WriteLine($"Congratulations! You've reached level {_level}!");
+        }
+    }
+
     public void ListGoalDetails()
     {
+        Console.WriteLine($"Current Score: {_score}");
+        Console.WriteLine($"Current Level: {_level}");
         for (int i = 0; i < _goals.Count; i++)
         {
             Console.WriteLine($"{i + 1}. {_goals[i].GetDetailsString()}");
@@ -82,7 +98,8 @@ public class GoalManager
     {
         using (StreamWriter writer = new StreamWriter(filePath))
         {
-            writer.WriteLine(_score);
+            writer.WriteLine($"Points: {_score}");
+            writer.WriteLine($"Level: {_level}");
             foreach (Goal goal in _goals)
             {
                 writer.WriteLine(goal.GetStringRepresentation());
@@ -95,10 +112,30 @@ public class GoalManager
         if (File.Exists(filePath))
         {
             string[] lines = File.ReadAllLines(filePath);
-            _score = int.Parse(lines[0]);
+
+            if (lines.Length < 2)
+            {
+                Console.WriteLine("Error: File format is invalid.");
+                return;
+            }
+
+            // Leer y validar puntos
+            if (!lines[0].StartsWith("Points: ") || !int.TryParse(lines[0].Substring(8), out _score))
+            {
+                Console.WriteLine("Error: Points are not in the correct format.");
+                return;
+            }
+
+            // Leer y validar nivel
+            if (!lines[1].StartsWith("Level: ") || !int.TryParse(lines[1].Substring(7), out _level))
+            {
+                Console.WriteLine("Error: Level is not in the correct format.");
+                return;
+            }
+
             _goals.Clear();
 
-            for (int i = 1; i < lines.Length; i++)
+            for (int i = 2; i < lines.Length; i++)
             {
                 string[] parts = lines[i].Split('|');
                 string type = parts[0];
@@ -127,6 +164,10 @@ public class GoalManager
                     _goals.Add(checklistGoal);
                 }
             }
+        }
+        else
+        {
+            Console.WriteLine("Error: File does not exist.");
         }
     }
 }
