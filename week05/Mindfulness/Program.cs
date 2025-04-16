@@ -12,7 +12,8 @@ class Program
             Console.WriteLine("1. Breathing Activity");
             Console.WriteLine("2. Listing Activity");
             Console.WriteLine("3. Reflecting Activity");
-            Console.WriteLine("4. Quit");
+            Console.WriteLine("4. Gratitude Activity"); // New Activity
+            Console.WriteLine("5. Quit");
             Console.Write("Enter your choice: ");
 
             string choice = Console.ReadLine();
@@ -35,6 +36,11 @@ class Program
                     break;
 
                 case "4":
+                    GratitudeActivity gratitudeActivity = new GratitudeActivity(); // New Activity
+                    gratitudeActivity.Run();
+                    break;
+
+                case "5":
                     Console.WriteLine("Thank you for using the Mindfulness Program. Goodbye!");
                     return;
 
