@@ -119,14 +119,14 @@ public class GoalManager
                 return;
             }
 
-            // Leer y validar puntos
+            // Read and validate points
             if (!lines[0].StartsWith("Points: ") || !int.TryParse(lines[0].Substring(8), out _score))
             {
                 Console.WriteLine("Error: Points are not in the correct format.");
                 return;
             }
 
-            // Leer y validar nivel
+            // Read and validate level
             if (!lines[1].StartsWith("Level: ") || !int.TryParse(lines[1].Substring(7), out _level))
             {
                 Console.WriteLine("Error: Level is not in the correct format.");

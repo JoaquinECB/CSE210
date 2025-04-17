@@ -4,7 +4,7 @@ public abstract class Goal
     protected string _description;
     protected int _points;
 
-    public int Points => _points; // Propiedad pública para acceder a los puntos
+    public int Points => _points; // Property to access _points
 
     public Goal(string name, string description, int points)
     {

@@ -4,7 +4,7 @@ public class ChecklistGoal : Goal
     private int _target;
     private int _bonus;
 
-    public int Bonus => _bonus; // Propiedad pública para acceder al bono
+    public int Bonus => _bonus; // Property to access _bonus
 
     public ChecklistGoal(string name, string description, int points, int target, int bonus)
         : base(name, description, points)
